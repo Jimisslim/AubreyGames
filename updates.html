@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aubrey's Health</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink: #ff85b3;
+            --hot-pink: #ff3d82;
+            --soft-pink: #ffc2d9;
+            --navy: #200000;
+            --deep-navy: #00001a00;
+            --purple: #1a0050;
+            --glow: 0 0 12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 0, 0, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--navy);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: rgb(255, 0, 0);
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff85b3' opacity='0.8'/%3E%3C/svg%3E") 10 10, auto;
+        }
+        
+        .page {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 80px;
+            gap: 50px;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin-top: 20px;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-wrapper img {
+            width: 420px;
+            max-width: 90vw;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.4));
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .yandere-badge {
+            position: absolute;
+            bottom: -10px;
+            right: -20px;
+            color: #ffffff;
+            font-family: 'Fredoka One', cursive;
+            font-size: 13px;
+            border-radius: 0px;
+            white-space: nowrap;
+            transform: rotate(8deg);
+            animation: badgePop 2s ease-in-out infinite;
+            letter-spacing: 0.03em;
+        }
+
+        @keyframes badgePop {
+            0%, 100% { transform: rotate(8deg) scale(1); }
+            50% { transform: rotate(8deg) scale(1.08); }
+        }
+
+        .welcome-card {
+            text-align: center;
+            max-width: 560px;
+            background: linear-gradient(135deg, rgba(255,133,179,0.08) 0%, rgba(26,0,80,0.6) 100%);
+            border: 1px solid rgba(255,133,179,0.25);
+            border-radius: 24px;
+            padding: 40px 48px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07);
+            animation: cardIn 0.8s cubic-bezier(0.22,1,0.36,1) both;
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-card h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(28px, 5vw, 42px);
+            color: var(--soft-pink);
+            text-shadow: var(--glow);
+            letter-spacing: 0.02em;
+            margin-bottom: 16px;
+        }
+
+        .welcome-card p {
+            color: rgba(255,200,220,0.8);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .section-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 22px;
+            color: var(--pink);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            text-shadow: 0 0 10px rgba(255,133,179,0.5);
+            text-align: center;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 220px));
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 920px;
+        }
+
+        .game-card {
+            background: linear-gradient(160deg, rgb(0, 0, 0), rgb(0, 0, 0));
+            border: 1px solid rgb(255, 0, 0);
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 520px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-6px) scale(1.02);
+        }
+
+        .game-icon-wrap {
+            width: 100%;
+            flex: 0 1 160px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        img.game-icon {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .game-card-text {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .game-card h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 16px;
+            color: var(--soft-pink);
+            margin-bottom: 4px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .game-card p {
+            font-size: 12px;
+            color: rgba(255,200,220,0.6);
+            line-height: 1.4;
+        }
+
+        .game-card .new-tag {
+            position: absolute;
+            top: 64px;
+            right: 64px;
+            background: var(--hot-pink);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255,133,179,0.35);
+            letter-spacing: 0.05em;
+        }
+
+        footer span {
+            color: var(--hot-pink);
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="hero">
+            <div class="logo-wrapper">
+                <img src="LOGO.png" alt="Aubrey's Games">
+                <span class="yandere-badge">Now with FNAF!</span>
+            </div>
+        </div>
+        
+        <hr style="width: 80%; border-color: rgba(255,133,179,0.2);">
+         <h1>Updates/Issues</h1>
+
+            <div class="game-card">
+                <div class="game-card-text">
+                    <h3>FNAF 1</h3>
+                    <p>No current issues.</p>
+                    <h3>FNAF 2</h3>
+                    <p>No current issues. It takes a second to load.</p>
+                    <h3>FNAF 3</h3>
+                    <p>This game does not work properly. It will load forever.</p>
+                    <h3>FNAF 4</h3>
+                    <p>Takes a LONG time to load, so long that I dont know if it works.</p>
+                    <h3>FNAF Sister Location</h3>
+                    <p>Im not sure if it works, it loads for a very long time.</p>
+                    <h3>Kindergarden</h3>
+                    <p>The G.O.A.T kidnergarden! Works first time!</p>
+                </div>
+            </div>
+
+    </div>
+
+    <script>
+        console.log("Hello there, fellow inspect user. You wont find anything very cool in here. Dont look too deep into my programming \"skills\" though");
+        
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.4) return;
+            const spark = document.createElement('div');
+            spark.style.cssText = `
+                position:fixed; pointer-events:none; z-index:998;
+                left:${e.clientX}px; top:${e.clientY}px;
+                width:6px; height:6px; border-radius:50%;
+                background: hsl(${330 + Math.random()*40}deg, 100%, 75%);
+                transform: translate(-50%,-50%) scale(1);
+                transition: transform 0.5s, opacity 0.5s;
+                opacity: 0.9;
+            `;
+            document.body.appendChild(spark);
+            requestAnimationFrame(() => {
+                spark.style.transform = `translate(${(Math.random()-0.5)*30}px, ${-20 - Math.random()*20}px) scale(0)`;
+                spark.style.opacity = '0';
+            });
+            setTimeout(() => spark.remove(), 550);
+        });
+    </script>
+</body>
+</html>
