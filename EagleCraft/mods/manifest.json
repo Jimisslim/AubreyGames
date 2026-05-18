@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "OptiFog",
+    "desc": "Reduces fog density maybe? Not sure if it works.",
+    "category": "performance",
+    "tag": "webgl",
+    "earlyFile": "EagleCraft/mods/optifog/early.js",
+    "codeFile": null
+  },
+  {
+    "id": 3,
+    "name": "ZoomMod",
+    "desc": "Hold C to smoothly zoom in 4x. Release to zoom back out.",
+    "category": "utility",
+    "tag": "hook",
+    "earlyFile": null,
+    "codeFile": "EagleCraft/mods/zoom/code.js"
+  }
+]

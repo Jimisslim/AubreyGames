@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AML</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="AMLStyle/style.css" />
+
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Aubrey's Mod Loader</div>
+  <div class="search-wrap">
+    <i class=""></i>
+    <input type="text" id="searchInput" placeholder="Search mods" oninput="filterMods()" />
+  </div>
+</div>
+
+<div class="loading-screen" id="loadingScreen">
+  <i class=""></i>
+  <span>Loading mod registry</span>
+</div>
+
+<div class="layout" id="appLayout" style="display:none">
+  <div class="sidebar">
+    <div class="sidebar-label">Category</div>
+    <button class="nav-item active" onclick="setCategory('all',this)"><i class=""></i>All</button>
+    <button class="nav-item" onclick="setCategory('performance',this)"><i class=""></i>Performance</button>
+    <button class="nav-item" onclick="setCategory('hud',this)"><i class=""></i>HUD &amp; UI</button>
+    <button class="nav-item" onclick="setCategory('utility',this)"><i class=""></i>Utility</button>
+    <button class="nav-item" onclick="setCategory('visual',this)"><i class=""></i>Visuals</button>
+    <div class="divider"></div>
+    <div class="active-section">
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="mod-grid" id="modGrid"></div>
+    <div class="no-results" id="noResults"><i class=""></i>No results</div>
+  </div>
+</div>
+
+<div class="bottombar">
+  <div class="launch-info" id="launchInfo"> 0 mods selected</div>
+  <button class="launch-btn" id="launchBtn" disabled onclick="launchClient()">
+    Attach & Launch
+  </button>
+</div>
+
+<div class="toast" id="toast">
+  <i class="" id="toastIcon"></i>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+'use strict';
+
+var MANIFEST_URL   = 'EagleCraft/mods/manifest.json';
+var EAGLECRAFT_URL  = 'EagleCraft/index.html';
+
+var MODS = [];
+var attached = new Set();
+var currentCategory = 'all';
+var searchTerm = '';
+
+var TAG_LABELS = {
+  webgl:   { cls:'tag-webgl',   text:'WebGL'   },
+  overlay: { cls:'tag-overlay', text:'Overlay' },
+  hook:    { cls:'tag-hook',    text:'Hook'    },
+};
+
+// ── Boot: load manifest ─────────────────────────────────────────────────
+fetch(MANIFEST_URL)
+  .then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(function(data) {
+    MODS = data;
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('appLayout').style.display = '';
+    renderMods();
+    updateUI();
+  })
+  .catch(function(err) {
+    document.getElementById('loadingScreen').innerHTML =
+      '<i class="" style="color:#ff5555;animation:none"></i>' +
+      '<span style="color:#ff5555">Could not load manifest: ' + err.message + '</span>';
+  });
+
+// ── Render grid ─────────────────────────────────────────────────────────
+function renderMods() {
+  var list = MODS.filter(function(m) {
+    var catOk  = currentCategory === 'all' || m.category === currentCategory;
+    var termOk = !searchTerm ||
+      m.name.toLowerCase().includes(searchTerm) ||
+      m.desc.toLowerCase().includes(searchTerm);
+    return catOk && termOk;
+  });
+
+  var grid  = document.getElementById('modGrid');
+  var noRes = document.getElementById('noResults');
+
+  if (!list.length) { grid.innerHTML = ''; noRes.style.display = 'block'; return; }
+  noRes.style.display = 'none';
+
+  grid.innerHTML = list.map(function(m) {
+    var on  = attached.has(m.id);
+    var tag = TAG_LABELS[m.tag] || { cls:'', text: m.tag || '' };
+    return [
+      '<div class="mod-card' + (on ? ' on' : '') + '">',
+        '<div><span class="card-tag ' + tag.cls + '">' + tag.text + '</span></div>',
+        '<div class="card-name">' + m.name + '</div>',
+        '<div class="card-desc">' + m.desc + '</div>',
+        '<button class="attach-btn' + (on ? ' on' : '') + '" onclick="toggleMod(' + m.id + ')">',
+          '<i class="ti ' + (on ? 'ti-check' : 'ti-plus') + '"></i>',
+          on ? 'Attached' : 'Attach',
+        '</button>',
+      '</div>',
+    ].join('');
+  }).join('');
+}
+
+function toggleMod(id) {
+  var mod = MODS.find(function(m) { return m.id === id; });
+  if (attached.has(id)) { attached.delete(id); showToast(mod.name + ' removed', 'ti-minus'); }
+  else                  { attached.add(id);    showToast(mod.name + ' attached', 'ti-check'); }
+  updateUI();
+  renderMods();
+}
+
+function updateUI() {
+  var count = attached.size;
+  document.getElementById('launchBtn').disabled = count === 0;
+  document.getElementById('launchInfo').innerHTML =
+    '<strong>' + count + ' mod' + (count !== 1 ? 's' : '') + '</strong> selected';
+
+  var list = document.getElementById('activeList');
+  if (!count) { list.innerHTML = '<div class="empty-label">None</div>'; return; }
+  list.innerHTML = Array.from(attached).map(function(id) {
+    var m = MODS.find(function(x) { return x.id === id; });
+    return [
+      '<div class="mod-chip">',
+        '<div class="mod-chip-dot"></div>',
+        '<div class="mod-chip-name" title="' + m.name + '">' + m.name + '</div>',
+        '<button class="mod-chip-rm" onclick="toggleMod(' + id + ')"><i class=""></i></button>',
+      '</div>',
+    ].join('');
+  }).join('');
+}
+
+function setCategory(cat, el) {
+  currentCategory = cat;
+  document.querySelectorAll('.nav-item').forEach(function(b) { b.classList.remove('active'); });
+  el.classList.add('active');
+  renderMods();
+}
+
+function filterMods() {
+  searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+  renderMods();
+}
+
+// ── Toast ───────────────────────────────────────────────────────────────
+var toastTimer;
+function showToast(msg, icon) {
+  var t = document.getElementById('toast');
+  document.getElementById('toastIcon').className = 'ti ' + (icon || 'ti-check');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 1800);
+}
+
+// ── Launch ──────────────────────────────────────────────────────────────
+// 1. Fetches every selected mod's JS file(s) in parallel
+// 2. Stores the text in localStorage under 'eaglemods_active'
+// 3. Navigates to EagleCraft
+function launchClient() {
+  if (!attached.size) return;
+
+  var btn = document.getElementById('launchBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="" style="animation:spin 1s linear infinite"></i>Fetching mods…';
+
+  var selectedMods = Array.from(attached).map(function(id) {
+    return MODS.find(function(m) { return m.id === id; });
+  });
+
+  // Build a flat list of fetch jobs: { mod, type:'earlyCode'|'code', url }
+  var jobs = [];
+  selectedMods.forEach(function(mod) {
+    if (mod.earlyFile) jobs.push({ mod: mod, type: 'earlyCode', url: mod.earlyFile });
+    if (mod.codeFile)  jobs.push({ mod: mod, type: 'code',      url: mod.codeFile  });
+  });
+
+  // Result map keyed by mod id
+  var results = {};
+  selectedMods.forEach(function(m) {
+    results[m.id] = { id: m.id, name: m.name, earlyCode: null, code: null };
+  });
+
+  var promises = jobs.map(function(job) {
+    return fetch(job.url)
+      .then(function(r) {
+        if (!r.ok) throw new Error(job.url + ' returned HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function(text) {
+        results[job.mod.id][job.type] = text;
+      });
+  });
+
+  Promise.all(promises)
+    .then(function() {
+      var payload = Object.values ? Object.values(results) : Object.keys(results).map(function(k){ return results[k]; });
+      try {
+        localStorage.setItem('eaglemods_active', JSON.stringify(payload));
+      } catch(e) {
+        throw new Error('localStorage write failed — are you on HTTP?');
+      }
+      showToast('Launching ' + selectedMods.length + ' mod(s)…', '');
+      setTimeout(function() { window.location.href = EAGLECRAFT_URL; }, 420);
+    })
+    .catch(function(err) {
+      showToast('Error: ' + err.message);
+      btn.disabled = false;
+      btn.innerHTML = 'Launch';
+    });
+}
+</script>
+</body>
+</html>
