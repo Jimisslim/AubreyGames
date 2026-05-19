@@ -1,20 +1,14 @@
-/**
- * ZoomMod — code.js
- * Hold C to zoom in, release to zoom out.
- * Works by scaling the game canvas with CSS transform.
- */
 (function () {
 
-  var ZOOM_FACTOR  = 4;    // how much to zoom in (4x)
-  var SMOOTH_SPEED = 0.18; // interpolation speed (0–1, higher = snappier)
+  var ZOOM_FACTOR  = 4;
+  var SMOOTH_SPEED = 0.18;
 
   var canvas   = null;
-  var current  = 1;        // current scale
-  var target   = 1;        // target scale
+  var current  = 1;
+  var target   = 1;
   var zooming  = false;
   var rafId    = null;
 
-  // ── Wait for game canvas ─────────────────────────────────────────────────
   function findCanvas() {
     canvas = document.querySelector('canvas');
     if (!canvas) { setTimeout(findCanvas, 200); return; }
@@ -25,7 +19,6 @@
     console.log('[ZoomMod] Ready — hold C to zoom');
   }
 
-  // ── Smooth scale loop ────────────────────────────────────────────────────
   function startLoop() {
     function tick() {
       rafId = requestAnimationFrame(tick);
@@ -41,7 +34,6 @@
     tick();
   }
 
-  // ── Key bindings ─────────────────────────────────────────────────────────
   function bindKeys() {
     document.addEventListener('keydown', function (e) {
       if (e.repeat) return;

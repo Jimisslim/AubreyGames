@@ -28,11 +28,11 @@
     <div class="sidebar-label">Category</div>
     <button class="nav-item active" onclick="setCategory('all',this)"><i class=""></i>All</button>
     <button class="nav-item" onclick="setCategory('performance',this)"><i class=""></i>Performance</button>
-    <button class="nav-item" onclick="setCategory('hud',this)"><i class=""></i>HUD &amp; UI</button>
+    <button class="nav-item" onclick="setCategory('hud',this)"><i class=""></i>HUD &amp; UI</button> 
     <button class="nav-item" onclick="setCategory('utility',this)"><i class=""></i>Utility</button>
     <button class="nav-item" onclick="setCategory('visual',this)"><i class=""></i>Visuals</button>
     <div class="divider"></div>
-    <div class="active-section">
+    <div class="active-section" id="activeList">
     </div>
   </div>
 
@@ -45,7 +45,7 @@
 <div class="bottombar">
   <div class="launch-info" id="launchInfo"> 0 mods selected</div>
   <button class="launch-btn" id="launchBtn" disabled onclick="launchClient()">
-    Attach & Launch
+    Launch
   </button>
 </div>
 
@@ -71,7 +71,7 @@ var TAG_LABELS = {
   hook:    { cls:'tag-hook',    text:'Hook'    },
 };
 
-// ── Boot: load manifest ─────────────────────────────────────────────────
+
 fetch(MANIFEST_URL)
   .then(function(r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -90,7 +90,7 @@ fetch(MANIFEST_URL)
       '<span style="color:#ff5555">Could not load manifest: ' + err.message + '</span>';
   });
 
-// ── Render grid ─────────────────────────────────────────────────────────
+
 function renderMods() {
   var list = MODS.filter(function(m) {
     var catOk  = currentCategory === 'all' || m.category === currentCategory;
@@ -163,7 +163,6 @@ function filterMods() {
   renderMods();
 }
 
-// ── Toast ───────────────────────────────────────────────────────────────
 var toastTimer;
 function showToast(msg, icon) {
   var t = document.getElementById('toast');
@@ -174,10 +173,6 @@ function showToast(msg, icon) {
   toastTimer = setTimeout(function() { t.classList.remove('show'); }, 1800);
 }
 
-// ── Launch ──────────────────────────────────────────────────────────────
-// 1. Fetches every selected mod's JS file(s) in parallel
-// 2. Stores the text in localStorage under 'eaglemods_active'
-// 3. Navigates to EagleCraft
 function launchClient() {
   if (!attached.size) return;
 
@@ -189,14 +184,12 @@ function launchClient() {
     return MODS.find(function(m) { return m.id === id; });
   });
 
-  // Build a flat list of fetch jobs: { mod, type:'earlyCode'|'code', url }
   var jobs = [];
   selectedMods.forEach(function(mod) {
     if (mod.earlyFile) jobs.push({ mod: mod, type: 'earlyCode', url: mod.earlyFile });
     if (mod.codeFile)  jobs.push({ mod: mod, type: 'code',      url: mod.codeFile  });
   });
 
-  // Result map keyed by mod id
   var results = {};
   selectedMods.forEach(function(m) {
     results[m.id] = { id: m.id, name: m.name, earlyCode: null, code: null };
