@@ -16,5 +16,23 @@
     "tag": "hook",
     "earlyFile": null,
     "codeFile": "EagleCraft/mods/zoom/code.js"
-  }
+  },
+  {
+  "id": 4,
+  "name": "ClickGUI",
+  "desc": "In-game mod manager. Press RShift to open.",
+  "category": "utility",
+  "tag": "overlay",
+  "earlyFile": null,
+  "codeFile": "EagleCraft/mods/clickgui/code.js"
+},
+{
+  "id": 99,
+  "name": "DebugOverlay",
+  "desc": "Visual debugger — remove when done.",
+  "category": "utility",
+  "tag": "overlay",
+  "earlyFile": null,
+  "codeFile": "EagleCraft/mods/debug/code.js"
+}
 ]
