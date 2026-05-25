@@ -421,42 +421,27 @@
     </div>
 
     <script>
-    console.log("Hello there, fellow inspect user. You wont find anything very cool in here. Dont look too deep into my programming \"skills\" though");
-    
-    let lastTime = 0;
-    const throttleDelay = 30;
-
-    document.addEventListener('mousemove', (e) => {
-        const now = performance.now();
-        if (now - lastTime < throttleDelay) return;
-        lastTime = now;
-
-        const spark = document.createElement('div');
+        console.log("Hello there, fellow inspect user. You wont find anything very cool in here. Dont look too deep into my programming \"skills\" though");
         
-        const randomHue = 330 + Math.random() * 40;
-        const targetX = (Math.random() - 0.5) * 30;
-        const targetY = -20 - Math.random() * 20;
-
-        spark.style.cssText = `
-            position: fixed; pointer-events: none; z-index: 998;
-            left: ${e.clientX}px; top: ${e.clientY}px;
-            width: 6px; height: 6px; border-radius: 50%;
-            background: hsl(${randomHue}deg, 100%, 75%);
-            transform: translate(-50%, -50%) scale(1);
-            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
-            opacity: 0.9;
-        `;
-        
-        document.body.appendChild(spark);
-
-        requestAnimationFrame(() => {
-            setTimeout(() => {
-                spark.style.transform = `translate(calc(-50% + ${targetX}px), calc(-50% + ${targetY}px)) scale(0)`;
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.4) return;
+            const spark = document.createElement('div');
+            spark.style.cssText = `
+                position:fixed; pointer-events:none; z-index:998;
+                left:${e.clientX}px; top:${e.clientY}px;
+                width:6px; height:6px; border-radius:50%;
+                background: hsl(${330 + Math.random()*40}deg, 100%, 75%);
+                transform: translate(-50%,-50%) scale(1);
+                transition: transform 0.5s, opacity 0.5s;
+                opacity: 0.9;
+            `;
+            document.body.appendChild(spark);
+            requestAnimationFrame(() => {
+                spark.style.transform = `translate(${(Math.random()-0.5)*30}px, ${-20 - Math.random()*20}px) scale(0)`;
                 spark.style.opacity = '0';
-            }, 10);
+            });
+            setTimeout(() => spark.remove(), 550);
         });
-        setTimeout(() => spark.remove(), 550);
-    });
-</script>
+    </script>
 </body>
 </html>
