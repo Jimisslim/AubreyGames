@@ -1,8 +1,6 @@
-// EagleCraft/mods/clickgui/code.js
 (function () {
   'use strict';
 
-  /* ── Config ───────────────────────────────────────────────── */
   var TOGGLE_KEY = 'RShift';
   var PANEL_W    = 580;
   var PANEL_H    = 390;
@@ -31,14 +29,13 @@
     tagOverlay: { bg:'rgba(245,158,11,0.18)',  fg:'#fbbf24' },
   };
 
-  /* ── State ────────────────────────────────────────────────── */
   var open        = false;
   var selectedCat = 'all';
   var mouse       = { x: 0, y: 0 };
-  var clickPos    = null;   // consumed each frame
-  var scrollY     = 0;     // mod list scroll offset
-  var enabled     = {};    // modId -> bool
-  var toggleCbs   = {};    // modId -> { enable, disable }
+  var clickPos    = null;
+  var scrollY     = 0;
+  var enabled     = {};
+  var toggleCbs   = {};
 
   var CATEGORIES = [
     { id:'all',         label:'All'        },
@@ -48,20 +45,16 @@
     { id:'visual',      label:'Visuals'    },
   ];
 
-  /* ── Public API extensions ────────────────────────────────── */
   AML.registerToggle = function (id, enableFn, disableFn) {
     toggleCbs[id] = { enable: enableFn, disable: disableFn };
   };
   AML.isEnabled = function (id) { return enabled[id] !== false; };
 
-  // Init all mods as enabled
   (AML.mods || []).forEach(function (m) { enabled[m.id] = true; });
 
-  /* ── Open / close ─────────────────────────────────────────── */
   function setOpen(val) {
     open = val;
     AML.setOverlayInteractive(val);
-    // Pause/resume game input (prevent WASD moving while GUI is open)
     document.dispatchEvent(new CustomEvent('aml:guiopen', { detail: val }));
   }
 
@@ -70,8 +63,7 @@
     setOpen(!open);
   });
 
-  /* ── Mouse ────────────────────────────────────────────────── */
-  // Use capture so we beat the game's listeners
+
   document.addEventListener('mousemove', function (e) {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
@@ -96,7 +88,6 @@
     e.preventDefault();
   }, { capture:true, passive:false });
 
-  /* ── Helpers ──────────────────────────────────────────────── */
   function rrect(ctx, x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -128,7 +119,6 @@
            clickPos.y >= ry && clickPos.y <= ry + rh;
   }
 
-  /* ── Drawing ──────────────────────────────────────────────── */
   AML.onFrame(function () {
     var ctx = AML.overlay();
     var W   = ctx.canvas.width;
@@ -138,7 +128,6 @@
 
     if (!open) { clickPos = null; return; }
 
-    // Dim background
     ctx.fillStyle = 'rgba(0,0,0,0.65)';
     ctx.fillRect(0, 0, W, H);
 
@@ -147,12 +136,10 @@
 
     drawPanel(ctx, px, py);
 
-    clickPos = null;    // consume click after all hit-tests
+    clickPos = null;
   });
 
-  /* ── Panel ────────────────────────────────────────────────── */
   function drawPanel(ctx, px, py) {
-    // Drop shadow
     ctx.shadowColor   = 'rgba(0,0,0,0.6)';
     ctx.shadowBlur    = 32;
     ctx.shadowOffsetY = 8;
@@ -163,13 +150,11 @@
     ctx.shadowBlur  = 0;
     ctx.shadowOffsetY = 0;
 
-    // Sidebar
     ctx.fillStyle = COLORS.sidebar;
     rrect(ctx, px, py, SIDEBAR_W, PANEL_H, 12);
     ctx.fill();
-    ctx.fillRect(px + SIDEBAR_W - 12, py, 12, PANEL_H); // square-off right edge
+    ctx.fillRect(px + SIDEBAR_W - 12, py, 12, PANEL_H);
 
-    // Title bar
     ctx.fillStyle = COLORS.accent;
     ctx.font      = '600 13px ' + FONT;
     ctx.textAlign = 'left';
@@ -178,14 +163,12 @@
     ctx.fillStyle = COLORS.text;
     ctx.fillText(' ClickGUI', px + 39, py + 19);
 
-    // Mod count badge
     var visCount = filteredMods().length;
     ctx.font = '11px ' + FONT;
     ctx.fillStyle = COLORS.textMuted;
     ctx.textAlign = 'right';
     ctx.fillText(visCount + ' mod' + (visCount !== 1 ? 's' : ''), px + PANEL_W - 14, py + 19);
 
-    // Divider
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.fillRect(px, py + 34, PANEL_W, 1);
 
@@ -193,14 +176,12 @@
     drawMods(ctx, px, py);
     drawScrollbar(ctx, px, py);
 
-    // Close hint
     ctx.font      = '10px ' + FONT;
     ctx.fillStyle = COLORS.textMuted;
     ctx.textAlign = 'right';
     ctx.fillText('RShift to close', px + PANEL_W - 12, py + PANEL_H - 10);
   }
 
-  /* ── Sidebar ──────────────────────────────────────────────── */
   function drawCategories(ctx, px, py) {
     var startY = py + 46;
     var itemH  = 30;
@@ -214,7 +195,6 @@
         ctx.fillStyle = COLORS.accentDim;
         rrect(ctx, px + 8, cy + 3, SIDEBAR_W - 16, itemH - 6, 5);
         ctx.fill();
-        // Active pill
         ctx.fillStyle = COLORS.accent;
         ctx.beginPath();
         ctx.roundRect ? ctx.roundRect(px + 4, cy + 9, 3, itemH - 18, 2)
@@ -239,7 +219,6 @@
     });
   }
 
-  /* ── Mod cards ────────────────────────────────────────────── */
   function filteredMods() {
     return (AML.mods || []).filter(function (m) {
       return selectedCat === 'all' || m.category === selectedCat;
@@ -253,7 +232,6 @@
     var listTop = py + 38;
     var listH   = PANEL_H - 50;
 
-    // Clip to list area
     ctx.save();
     ctx.beginPath();
     ctx.rect(cx, listTop, cw, listH);
@@ -265,38 +243,33 @@
 
     mods.forEach(function (mod, i) {
       var cardY = listTop + i * (CARD_H + CARD_GAP) - scrollY;
-      if (cardY + CARD_H < listTop || cardY > listTop + listH) return; // culled
+      if (cardY + CARD_H < listTop || cardY > listTop + listH) return;
 
       var on      = enabled[mod.id] !== false;
       var isHit   = hit(cx, cardY, cw, CARD_H);
       var isClick = clicked(cx, cardY, cw, CARD_H);
 
-      // Card bg
       ctx.fillStyle = isHit ? COLORS.cardHover : COLORS.card;
       rrect(ctx, cx, cardY, cw, CARD_H, 7);
       ctx.fill();
 
-      // Border
       ctx.strokeStyle = on ? COLORS.borderOn : COLORS.border;
       ctx.lineWidth   = 1;
       rrect(ctx, cx, cardY, cw, CARD_H, 7);
       ctx.stroke();
 
-      // Left accent bar when on
       if (on) {
         ctx.fillStyle = COLORS.accent;
         rrect(ctx, cx, cardY + 12, 3, CARD_H - 24, 2);
         ctx.fill();
       }
 
-      // Mod name
       ctx.font      = '500 13px ' + FONT;
       ctx.fillStyle = on ? COLORS.text : COLORS.textMuted;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
       ctx.fillText(mod.name, cx + 14, cardY + 18);
 
-      // Tag pill
       var tagCols = { webgl: COLORS.tagWebgl, hook: COLORS.tagHook, overlay: COLORS.tagOverlay };
       var tc = tagCols[mod.tag] || { bg:'rgba(255,255,255,0.08)', fg:'#888' };
       ctx.font = '10px ' + FONT;
@@ -309,17 +282,14 @@
       ctx.textBaseline = 'middle';
       ctx.fillText(tagLabel, cx + 19, cardY + 39);
 
-      // Description (truncated)
       ctx.font      = '11px ' + FONT;
       ctx.fillStyle = on ? COLORS.textMuted : COLORS.textMuted;
       ctx.fillText(truncate(ctx, mod.desc, cw - tagW - 80), cx + 20 + tagW, cardY + 39);
 
-      // Toggle switch
       var tx = cx + cw - 50;
       var ty = cardY + CARD_H / 2 - 9;
       drawToggle(ctx, tx, ty, on);
 
-      // Click — toggle mod
       if (isClick) {
         enabled[mod.id] = !on;
         var cbs = toggleCbs[mod.id];
@@ -332,11 +302,9 @@
     ctx.restore();
   }
 
-  /* ── Toggle switch ────────────────────────────────────────── */
   function drawToggle(ctx, x, y, on) {
     var w = 34, h = 18, r = 9;
 
-    // Track
     ctx.fillStyle = on ? COLORS.toggleOn : COLORS.toggleOff;
     rrect(ctx, x, y, w, h, r);
     ctx.fill();
@@ -345,7 +313,6 @@
     rrect(ctx, x, y, w, h, r);
     ctx.stroke();
 
-    // Knob
     var kx = on ? x + w - r - 1 : x + r + 1;
     ctx.fillStyle = on ? '#ffffff' : '#555566';
     ctx.beginPath();
@@ -353,7 +320,6 @@
     ctx.fill();
   }
 
-  /* ── Scrollbar ────────────────────────────────────────────── */
   function drawScrollbar(ctx, px, py) {
     var mods    = filteredMods();
     var listH   = PANEL_H - 50;

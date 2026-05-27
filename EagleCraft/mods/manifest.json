@@ -29,7 +29,7 @@
 {
   "id": 99,
   "name": "DebugOverlay",
-  "desc": "Visual debugger — remove when done.",
+  "desc": "Visual debugger",
   "category": "utility",
   "tag": "overlay",
   "earlyFile": null,
