@@ -7,37 +7,29 @@ window.__amlLog = _log;
 
   var STORAGE_KEY = 'eaglemods_active';
 
-  /* ── Load mod payload ─────────────────────────────────────── */
   var mods = [];
 try {
   var raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return;
   mods = JSON.parse(raw);
-  // ADD THIS ↓
   AML.mods = mods;
   localStorage.removeItem(STORAGE_KEY);
 } catch (e) { return; }
 if (!Array.isArray(mods) || !mods.length) return;
 
-  /* ── AML API surface ──────────────────────────────────────── */
   var _frameCallbacks  = [];
-  var _keyBindings     = {};   // 'KeyW' -> [fn, ...]
-  var _eventListeners  = {};   // 'chat' | 'tick' -> [fn, ...]
+  var _keyBindings     = {}; 
+  var _eventListeners  = {}; 
   var _glCtx           = null;
   var _overlayCanvas   = null;
   var _overlayCtx      = null;
 
   window.AML = {
 
-    /** Register a callback that fires every animation frame.
-     *  cb(deltaMs: number, totalMs: number) */
     onFrame: function (cb) { _frameCallbacks.push(cb); },
 
-    /** Get the live WebGL context (null until the game creates its canvas). */
     gl: function () { return _glCtx; },
 
-    /** Register a keybind.  key = KeyboardEvent.code string e.g. 'KeyF'.
-     *  cb fires on keydown.  Returns an unregister fn. */
     addKeybind: function (key, cb) {
       if (!_keyBindings[key]) _keyBindings[key] = [];
       _keyBindings[key].push(cb);
@@ -46,8 +38,6 @@ if (!Array.isArray(mods) || !mods.length) return;
       };
     },
 
-    /** Subscribe to named AML events: 'chat', 'tick', 'glReady', 'modLoaded'.
-     *  Returns an unsubscribe fn. */
     on: function (event, cb) {
       if (!_eventListeners[event]) _eventListeners[event] = [];
       _eventListeners[event].push(cb);
@@ -56,7 +46,6 @@ if (!Array.isArray(mods) || !mods.length) return;
       };
     },
 
-    /** Get (or lazily create) a 2-D overlay canvas that sits on top of the game. */
     overlay: function () {
       if (_overlayCtx) return _overlayCtx;
       _overlayCanvas = document.createElement('canvas');
@@ -74,14 +63,12 @@ if (!Array.isArray(mods) || !mods.length) return;
       return _overlayCtx;
     },
 
-    /** Emit an AML event (mods can talk to each other). */
     emit: function (event, data) {
       (_eventListeners[event] || []).forEach(function (cb) {
         try { cb(data); } catch (e) { console.warn('[AML] event error:', e); }
       });
     },
 
-    /** Tiny mod-to-mod shared store. */
     store: {},
     mods: [],
     setOverlayInteractive: function (on) {
@@ -89,7 +76,6 @@ if (!Array.isArray(mods) || !mods.length) return;
   },
   };
 
-  /* ── Hook: WebGL context capture ─────────────────────────── */
   var _origGetContext = HTMLCanvasElement.prototype.getContext;
   HTMLCanvasElement.prototype.getContext = function (type, opts) {
     var ctx = _origGetContext.call(this, type, opts);
@@ -100,7 +86,6 @@ if (!Array.isArray(mods) || !mods.length) return;
     return ctx;
   };
 
-  /* ── Hook: Frame loop ─────────────────────────────────────── */
   var _startTime = null;
   var _lastTime  = null;
   var _origRAF   = window.requestAnimationFrame;
@@ -116,14 +101,11 @@ if (!Array.isArray(mods) || !mods.length) return;
     });
   };
 
-  /* ── Hook: Keyboard input ─────────────────────────────────── */
   document.addEventListener('keydown', function (e) {
     (_keyBindings[e.code] || []).forEach(function (fn) {
       try { fn(e); } catch (err) {}
     });
-  }, true);   // capture phase — fires before the game sees it
-
-  /* ── Inject scripts ───────────────────────────────────────── */
+  }, true);
   function injectScript(name, code, phase) {
     try {
       var el = document.createElement('script');
@@ -138,12 +120,10 @@ if (!Array.isArray(mods) || !mods.length) return;
     }
   }
 
-  // Early phase — runs synchronously now, before classes.js
   mods.forEach(function (mod) {
     if (mod.earlyCode) injectScript(mod.name, mod.earlyCode, 'early');
   });
 
-  // Code phase — after DOM ready
   function lateInject() {
     mods.forEach(function (mod) {
       if (mod.code) injectScript(mod.name, mod.code, 'code');
