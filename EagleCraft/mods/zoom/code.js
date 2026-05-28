@@ -1,4 +1,3 @@
-// EagleCraft/mods/zoom/code.js
 (function () {
 
   var ZOOM_FACTOR  = 4;
@@ -7,7 +6,6 @@
   var current = 1;
   var target  = 1;
 
-  // AML handles the frame loop — no need for our own RAF
   AML.onFrame(function () {
     var canvas = document.querySelector('canvas');
     if (!canvas) return;
@@ -22,16 +20,14 @@
     canvas.style.transform = 'scale(' + current.toFixed(4) + ')';
   });
 
-  // AML handles keybinds — no capture-phase listener conflicts
   AML.addKeybind('KeyC', function (e) {
     if (e.type === 'keydown' && !e.repeat) target = ZOOM_FACTOR;
   });
 
-  // addKeybind only does keydown, so we need keyup separately
   document.addEventListener('keyup', function (e) {
     if (e.code === 'KeyC') target = 1;
   });
 
-  console.log('[ZoomMod] Ready — hold C to zoom');
+  console.log('hold C to zoom');
 
 }());
