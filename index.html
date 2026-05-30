@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aubrey's Health</title>
-
     <link rel="icon" href="Icon.ico">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -208,6 +205,160 @@
             padding: 3px 8px;
             border-radius: 999px;
             text-transform: uppercase;
+        }
+
+        .lock-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 0, 0, 0.72);
+            backdrop-filter: blur(3px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+
+
+        .lock-overlay img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
+
+        .lock-overlay span {
+            font-family: 'Fredoka One', cursive;
+            font-size: 13px;
+            color: var(--soft-pink);
+            letter-spacing: 0.05em;
+        }
+
+        .pw-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pw-modal-backdrop.open {
+            display: flex;
+        }
+
+        .pw-modal {
+            background: linear-gradient(145deg, #000000, #000000);
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            padding: 36px 40px;
+            width: min(380px, 90vw);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .pw-modal img.lock-icon-modal {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .pw-modal h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 22px;
+            color: var(--soft-pink);
+            text-shadow: var(--glow);
+            text-align: center;
+        }
+
+        .pw-modal p {
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.65);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .pw-input {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            padding: 12px 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            color: var(--soft-pink);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        .pw-input::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.05em;
+        }
+
+        .pw-input:focus {
+            border-color: var(--hot-pink);
+            box-shadow: 0 0 0 3px rgba(255,61,130,0.15);
+        }
+
+        .pw-input.shake {
+            animation: shake 0.4s ease;
+            border-color: #000000;
+        }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%      { transform: translateX(-8px); }
+            40%      { transform: translateX(8px); }
+            60%      { transform: translateX(-6px); }
+            80%      { transform: translateX(6px); }
+        }
+
+        .pw-error {
+            font-size: 12px;
+            color: #ff6b6b;
+            font-family: 'Nunito', sans-serif;
+            min-height: 16px;
+            text-align: center;
+        }
+
+        .pw-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            border-color: #000000;
+        }
+
+        .pw-btn {
+            flex: 1;
+            padding: 11px 0;
+            font-family: 'Fredoka One', cursive;
+            font-size: 15px;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.15s, opacity 0.15s;
+            border-color: #000000;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .pw-btn:hover { transform: translateY(-2px); }
+        .pw-btn:active { transform: translateY(0); opacity: 0.85; }
+
+        .pw-btn-confirm {
+            background: #000000;
+            color: rgb(0, 0, 0);
+        }
+
+        .pw-btn-cancel {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: rgba(0, 0, 0, 0.7);
         }
 
         footer {
@@ -418,6 +569,7 @@
                     <p>Port by GN math! Finally I can be like markiplier</p>
                 </div>
             </div>
+
             <div class="game-card" onclick="window.open('DuckLife2/index.html', '_blank')">
                 <div class="game-icon-wrap">
                     <img src="ducklife.png" alt="Duck Life" class="game-icon">
@@ -471,6 +623,17 @@
                     <b>!! YOU WILL SEE A BLACK SCREEN KEEP CLICKING SKIP !!</b>
                 </div>
             </div>
+
+            <div class="game-card" onclick="window.open('https://funny-valkyrie-d21c5e.netlify.app/', '_blank')">
+                <div class="game-icon-wrap">
+                    <img src="SS.png" alt="Balatro" class="game-icon">
+                </div>
+                <div class="game-card-text">
+                    <h3>Hollow Knight: Silksong</h3>
+                    <p>Takes a while to load assets, once your in the game it takes some time to laod too</p>
+                    <p>Credits to genizy! ...per usual</p>
+                </div>
+            </div>
             
             <div class="game-card" onclick="window.open('SlimeRancher/index.html', '_blank')">
                 <div class="game-icon-wrap">
@@ -493,7 +656,7 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('NSO/index.html', '_blank')">
+            <div class="game-card" onclick="openLocked(this, 'NSO/index.html')" data-locked="true">
                 <div class="game-icon-wrap">
                     <img src="NSO.png" alt="Needy Streamer Overload" class="game-icon">
                 </div>
@@ -502,12 +665,83 @@
                     <p>This game is here because it was on Aubreys wishlist.</p>
                     <p>Credits to edurocks!</p>
                 </div>
+                <div class="lock-overlay">
+                    <img src="lock.png" alt="Locked">
+                    <span>Password Required</span>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="pw-modal-backdrop" id="pwBackdrop" onclick="closePwModal(event)">
+        <div class="pw-modal">
+            <img src="lock.png" alt="Lock" class="lock-icon-modal">
+            <h2>Age Restricted</h2>
+            <p>Enter the password to continue.</p>
+            <input
+                class="pw-input"
+                id="pwInput"
+                type="password"
+                placeholder="password"
+                onkeydown="if(event.key==='Enter') confirmPassword()"
+            >
+            <div class="pw-error" id="pwError"></div>
+            <div class="pw-buttons">
+                <button class="pw-btn pw-btn-cancel" onclick="closePwModal()">Cancel</button>
+                <button class="pw-btn pw-btn-confirm" onclick="confirmPassword()">Unlock</button>
+            </div>
+        </div>
     </div>
 
     <script>
         console.log("Hello there, fellow inspect user. You wont find anything very cool in here. Dont look too deep into my programming \"skills\" though");
-        
+
+        const LOCKED_PASSWORD = "5789";
+
+        let pendingUrl = null;
+
+        function openLocked(card, url) {
+            pendingUrl = url;
+            const backdrop = document.getElementById('pwBackdrop');
+            const input = document.getElementById('pwInput');
+            const errEl = document.getElementById('pwError');
+            errEl.textContent = '';
+            input.value = '';
+            backdrop.classList.add('open');
+            setTimeout(() => input.focus(), 80);
+        }
+
+        function closePwModal(e) {
+
+            if (e && e.target !== document.getElementById('pwBackdrop')) return;
+            document.getElementById('pwBackdrop').classList.remove('open');
+            pendingUrl = null;
+        }
+
+        function confirmPassword() {
+            const input = document.getElementById('pwInput');
+            const errEl = document.getElementById('pwError');
+            if (input.value === LOCKED_PASSWORD) {
+                document.getElementById('pwBackdrop').classList.remove('open');
+                window.open(pendingUrl, '_blank');
+                pendingUrl = null;
+            } else {
+                errEl.textContent = 'Incorrect. Ask me for the password.';
+                input.classList.remove('shake');
+                void input.offsetWidth;
+                input.classList.add('shake');
+                input.value = '';
+                setTimeout(() => input.classList.remove('shake'), 400);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('pwBackdrop').classList.remove('open');
+                pendingUrl = null;
+            }
+        });
+
         document.addEventListener('mousemove', (e) => {
             if (Math.random() > 0.4) return;
             const spark = document.createElement('div');
