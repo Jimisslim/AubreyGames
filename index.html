@@ -4,380 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aubrey's Health</title>
-    <link rel="icon" href="Icon.ico">
+    <link rel="icon" href="Images/Icon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --pink: #ff85b3;
-            --hot-pink: #ff3d82;
-            --soft-pink: #ffc2d9;
-            --navy: #200000;
-            --deep-navy: #00001a00;
-            --purple: #1a0050;
-            --glow: 0 0 12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 0, 0, 0.3);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: var(--navy);
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: rgb(255, 0, 0);
-            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ff85b3' opacity='0.8'/%3E%3C/svg%3E") 10 10, auto;
-        }
-        
-        .page {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px 80px;
-            gap: 50px;
-        }
-
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
-            margin-top: 20px;
-        }
-
-        .logo-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .logo-wrapper img {
-            width: 420px;
-            max-width: 90vw;
-            height: auto;
-            display: block;
-            filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.4));
-            animation: logoFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .yandere-badge {
-            position: absolute;
-            bottom: -10px;
-            right: -20px;
-            color: #ffffff;
-            font-family: 'Fredoka One', cursive;
-            font-size: 13px;
-            border-radius: 0px;
-            white-space: nowrap;
-            transform: rotate(8deg);
-            animation: badgePop 2s ease-in-out infinite;
-            letter-spacing: 0.03em;
-        }
-
-        @keyframes badgePop {
-            0%, 100% { transform: rotate(8deg) scale(1); }
-            50% { transform: rotate(8deg) scale(1.08); }
-        }
-
-        .welcome-card {
-            text-align: center;
-            max-width: 560px;
-            background: linear-gradient(135deg, rgba(255,133,179,0.08) 0%, rgba(26,0,80,0.6) 100%);
-            border: 1px solid rgba(255,133,179,0.25);
-            border-radius: 24px;
-            padding: 40px 48px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07);
-            animation: cardIn 0.8s cubic-bezier(0.22,1,0.36,1) both;
-        }
-
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .welcome-card h1 {
-            font-family: 'Fredoka One', cursive;
-            font-size: clamp(28px, 5vw, 42px);
-            color: var(--soft-pink);
-            text-shadow: var(--glow);
-            letter-spacing: 0.02em;
-            margin-bottom: 16px;
-        }
-
-        .welcome-card p {
-            color: rgba(255,200,220,0.8);
-            font-size: 16px;
-            line-height: 1.7;
-        }
-
-        .section-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: 22px;
-            color: var(--pink);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            text-shadow: 0 0 10px rgba(255,133,179,0.5);
-            text-align: center;
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 220px));
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-            max-width: 920px;
-        }
-
-        .game-card {
-            background: linear-gradient(160deg, rgb(0, 0, 0), rgb(0, 0, 0));
-            border: 1px solid rgb(255, 0, 0);
-            padding: 20px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 320px;
-        }
-
-        .game-card:hover {
-            transform: translateY(-6px) scale(1.02);
-        }
-
-        .game-icon-wrap {
-            width: 100%;
-            flex: 0 1 160px;
-            min-height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        img.game-icon {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .game-card-text {
-            flex: 0 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .game-card h3 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 16px;
-            color: var(--soft-pink);
-            margin-bottom: 4px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .game-card p {
-            font-size: 12px;
-            color: rgba(255,200,220,0.6);
-            line-height: 1.4;
-        }
-
-        .game-card .new-tag {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: var(--hot-pink);
-            color: white;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            padding: 3px 8px;
-            border-radius: 999px;
-            text-transform: uppercase;
-        }
-
-        .lock-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(10, 0, 0, 0.72);
-            backdrop-filter: blur(3px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            z-index: 10;
-            transition: background 0.2s;
-        }
-
-
-        .lock-overlay img {
-            width: 56px;
-            height: 56px;
-            object-fit: contain;
-        }
-
-        .lock-overlay span {
-            font-family: 'Fredoka One', cursive;
-            font-size: 13px;
-            color: var(--soft-pink);
-            letter-spacing: 0.05em;
-        }
-
-        .pw-modal-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(6px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .pw-modal-backdrop.open {
-            display: flex;
-        }
-
-        .pw-modal {
-            background: linear-gradient(145deg, #000000, #000000);
-            border: 1px solid rgba(0, 0, 0, 0.5);
-            padding: 36px 40px;
-            width: min(380px, 90vw);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .pw-modal img.lock-icon-modal {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-        }
-
-        .pw-modal h2 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 22px;
-            color: var(--soft-pink);
-            text-shadow: var(--glow);
-            text-align: center;
-        }
-
-        .pw-modal p {
-            font-size: 13px;
-            color: rgba(0, 0, 0, 0.65);
-            text-align: center;
-            line-height: 1.5;
-        }
-
-        .pw-input {
-            width: 100%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(0, 0, 0, 0.4);
-            padding: 12px 16px;
-            font-family: 'Nunito', sans-serif;
-            font-size: 15px;
-            color: var(--soft-pink);
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            text-align: center;
-            letter-spacing: 0.1em;
-        }
-
-        .pw-input::placeholder {
-            color: rgba(0, 0, 0, 0.3);
-            letter-spacing: 0.05em;
-        }
-
-        .pw-input:focus {
-            border-color: var(--hot-pink);
-            box-shadow: 0 0 0 3px rgba(255,61,130,0.15);
-        }
-
-        .pw-input.shake {
-            animation: shake 0.4s ease;
-            border-color: #000000;
-        }
-
-        @keyframes shake {
-            0%,100% { transform: translateX(0); }
-            20%      { transform: translateX(-8px); }
-            40%      { transform: translateX(8px); }
-            60%      { transform: translateX(-6px); }
-            80%      { transform: translateX(6px); }
-        }
-
-        .pw-error {
-            font-size: 12px;
-            color: #ff6b6b;
-            font-family: 'Nunito', sans-serif;
-            min-height: 16px;
-            text-align: center;
-        }
-
-        .pw-buttons {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            border-color: #000000;
-        }
-
-        .pw-btn {
-            flex: 1;
-            padding: 11px 0;
-            font-family: 'Fredoka One', cursive;
-            font-size: 15px;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            border: none;
-            transition: transform 0.15s, opacity 0.15s;
-            border-color: #000000;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-        }
-
-        .pw-btn:hover { transform: translateY(-2px); }
-        .pw-btn:active { transform: translateY(0); opacity: 0.85; }
-
-        .pw-btn-confirm {
-            background: #000000;
-            color: rgb(0, 0, 0);
-        }
-
-        .pw-btn-cancel {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            color: rgba(0, 0, 0, 0.7);
-        }
-
-        footer {
-            text-align: center;
-            font-size: 13px;
-            color: rgba(255,133,179,0.35);
-            letter-spacing: 0.05em;
-        }
-
-        footer span {
-            color: var(--hot-pink);
-        }
-    </style>
+    <link rel="stylesheet" href="Style/style.css">
+    <script src="JavaScript/main.js" defer></script>
 </head>
 <body>
     <div class="page">
         <div class="hero">
             <div class="logo-wrapper">
-                <img src="LOGO.png" alt="Aubrey's Games">
+                <img src="Images/LOGO.png" alt="Aubrey's Games">
                 <span class="yandere-badge">Now with Yandere Simulator!</span>
             </div>
         </div>
@@ -385,9 +22,9 @@
         <hr style="width: 80%; border-color: rgba(255,133,179,0.2);">
 
         <div class="games-grid">
-            <div class="game-card" onclick="window.open('FNAF1Web/FiveNightsAtFreddys/index.html', '_blank')">
+            <div class="game-card" data-game="FNAF 1" onclick="window.open('FNAF1Web/FiveNightsAtFreddys/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="FNAF.png" class="game-icon" alt="FNAF 1 Icon">
+                    <img src="Images/FNAF.png" class="game-icon" alt="FNAF 1 Icon">
                 </div>
                 <div class="game-card-text">
                     <h3>FNAF 1</h3>
@@ -396,9 +33,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('FNAF2Web/FiveNightsAtFreddys2/index.html', '_blank')">
+            <div class="game-card" data-game="FNAF 2" onclick="window.open('FNAF2Web/FiveNightsAtFreddys2/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="FNAF2.png" class="game-icon" alt="FNAF 2 Icon">
+                    <img src="Images/FNAF2.png" class="game-icon" alt="FNAF 2 Icon">
                 </div>
                 <div class="game-card-text">
                     <h3>FNAF 2</h3>
@@ -407,9 +44,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('FNAF3Web/FiveNightsAtFreddys3/index.html', '_blank')">
+            <div class="game-card" data-game="FNAF 3" onclick="window.open('FNAF3Web/FiveNightsAtFreddys3/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="FNaF3.png" class="game-icon" alt="FNAF 3 Icon">
+                    <img src="Images/FNaF3.png" class="game-icon" alt="FNAF 3 Icon">
                 </div>
                 <div class="game-card-text">
                     <h3>FNAF 3</h3>
@@ -418,9 +55,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('FNAF4Web/FiveNightsAtFreddys4/index.html', '_blank')">
+            <div class="game-card" data-game="FNAF 4" onclick="window.open('FNAF4Web/FiveNightsAtFreddys4/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="fnaf4.png" class="game-icon" alt="FNAF 4 Icon">
+                    <img src="Images/fnaf4.png" class="game-icon" alt="FNAF 4 Icon">
                 </div>
                 <div class="game-card-text">
                     <h3>FNAF 4</h3>
@@ -430,9 +67,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('FNAF5Web/FiveNightsAtFreddys5/index.html', '_blank')">
+            <div class="game-card" data-game="FNAF 5" onclick="window.open('FNAF5Web/FiveNightsAtFreddys5/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="FNAF5.png" class="game-icon" alt="FNAF 5 Icon">
+                    <img src="Images/FNAF5.png" class="game-icon" alt="FNAF 5 Icon">
                 </div>
                 <div class="game-card-text">
                     <h3>FNAF 5</h3>
@@ -442,19 +79,19 @@
                 </div>
             </div>
             
-            <div class="game-card" onclick="window.open('Kindergarden/index.html', '_blank')">
+            <div class="game-card" data-game="Kindergarten" onclick="window.open('Kindergarden/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="Kindergarden.png" alt="Kindergarden" class="game-icon">
+                    <img src="Images/Kindergarden.png" alt="Kindergarden" class="game-icon">
                 </div>
                 <div class="game-card-text">
-                    <h3>kindergarten </h3>
+                    <h3>kindergarten</h3>
                     <p>Thank you gn-math for your web export! Ill do my own export later, but this is a good starting point.</p>
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('Kindergarten2/index.html', '_blank')">
+            <div class="game-card" data-game="Kindergarten 2" onclick="window.open('Kindergarten2/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="kindergarten2.png" alt="Kindergarden" class="game-icon">
+                    <img src="Images/kindergarten2.png" alt="Kindergarden" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>kindergarten 2</h3>
@@ -462,9 +99,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('BaldisTest/index.html', '_blank')">
+            <div class="game-card" data-game="Baldi's Basics" onclick="window.open('BaldisTest/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="Baldis.png" alt="Kindergarden" class="game-icon">
+                    <img src="Images/Baldis.png" alt="Kindergarden" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Baldis Basics</h3>
@@ -473,9 +110,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('https://effulgent-puppy-ea40bc.netlify.app/', '_blank')">
+            <div class="game-card" data-game="Pizza Tower" onclick="window.open('https://effulgent-puppy-ea40bc.netlify.app/', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="PT.png" alt="Pizza Tower" class="game-icon">
+                    <img src="Images/PT.png" alt="Pizza Tower" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Pizza Tower</h3>
@@ -484,9 +121,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('https://phenomenal-nougat-7ccb82.netlify.app', '_blank')">
+            <div class="game-card" data-game="Undertale" onclick="window.open('https://phenomenal-nougat-7ccb82.netlify.app', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="Undertale.png" alt="Undertale" class="game-icon">
+                    <img src ="Images/Undertale.png" alt="Undertale" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Undertale</h3>
@@ -495,9 +132,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('https://playful-axolotl-cf04fc.netlify.app', '_blank')">
+            <div class="game-card" data-game="Cuphead" onclick="window.open('https://playful-axolotl-cf04fc.netlify.app', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="Cuphead.png" alt="Cuphead" class="game-icon">
+                    <img src="Images/Cuphead.png" alt="Cuphead" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Cuphead</h3>
@@ -507,9 +144,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="location.href='play-buildnow.html'">
+            <div class="game-card" data-game="Build Now GG" onclick="location.href='Runners/play-buildnow.html'">
                 <div class="game-icon-wrap">
-                    <img src="buildnowgg.png" alt="Build Now GG" class="game-icon">
+                    <img src="Images/buildnowgg.png" alt="Build Now GG" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Build Now GG</h3>
@@ -517,9 +154,9 @@
                 </div>
             </div>
             
-            <div class="game-card" onclick="window.open('BuckShot/index.html', '_blank')">
+            <div class="game-card" data-game="Buckshot Roulette" onclick="window.open('BuckShot/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="BR.png" alt="Buckshot Roulette" class="game-icon">
+                    <img src="Images/BR.png" alt="Buckshot Roulette" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Buckshot Roulette</h3>
@@ -528,9 +165,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="location.href='EagleCraft/index.html'">
+            <div class="game-card" data-game="EagleCraft" onclick="location.href='EagleCraft/index.html'">
                 <div class="game-icon-wrap">
-                    <img src="EagleCraft.png" alt="EagleCraft" class="game-icon">
+                    <img src="Images/EagleCraft.png" alt="EagleCraft" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>EagleCraft (minecraft 1.8.8 VANILLA)</h3>
@@ -539,9 +176,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="location.href='PlayRythm.html'">
+            <div class="game-card" data-game="Rythm Plus" onclick="location.href='Runners/PlayRythm.html'">
                 <div class="game-icon-wrap">
-                    <img src="rythm.png" alt="Rythm Plus" class="game-icon">
+                    <img src="Images/rythm.png" alt="Rythm Plus" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Rythm Plus</h3>
@@ -549,9 +186,9 @@
                 </div>
             </div>
             
-            <div class="game-card" onclick="window.open('PP/index.html', '_blank')">
+            <div class="game-card" data-game="People Playground" onclick="window.open('PP/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="PP.png" alt="Rythm Plus" class="game-icon">
+                    <img src="Images/PP.png" alt="Rythm Plus" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>People Playground</h3>
@@ -560,9 +197,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('TNMN/index.html', '_blank')">
+            <div class="game-card" data-game="That's Not My Neighbor" onclick="window.open('TNMN/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="TNMN.png" alt="Rythm Plus" class="game-icon">
+                    <img src="Images/TNMN.png" alt="Rythm Plus" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Thats Not My Neighbor</h3>
@@ -570,9 +207,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('DuckLife2/index.html', '_blank')">
+            <div class="game-card" data-game="Duck Life" onclick="window.open('DuckLife2/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="ducklife.png" alt="Duck Life" class="game-icon">
+                    <img src="Images/ducklife.png" alt="Duck Life" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Duck Life</h3>
@@ -580,9 +217,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('ultrakill/index.html', '_blank')">
+            <div class="game-card" data-game="Ultrakill" onclick="window.open('ultrakill/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="ULogo.png" alt="Ultrakill" class="game-icon">
+                    <img src="Images/ULogo.png" alt="Ultrakill" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Ultrakill</h3>
@@ -591,9 +228,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('PVZ/index.html', '_blank')">
+            <div class="game-card" data-game="Plants vs. Zombies" onclick="window.open('PVZ/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="PVZ.png" alt="PVZ" class="game-icon">
+                    <img src="Images/PVZ.png" alt="PVZ" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Plants vs. Zombies</h3>
@@ -601,9 +238,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('IronLung/index.html', '_blank')">
+            <div class="game-card" data-game="Iron Lung" onclick="window.open('IronLung/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="IronLung.png" alt="IronLung" class="game-icon">
+                    <img src="Images/IronLung.png" alt="IronLung" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Iron lung</h3>
@@ -613,9 +250,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('https://willowy-fox-2c1aa7.netlify.app/', '_blank')">
+            <div class="game-card" data-game="Hollow Knight" onclick="window.open('https://willowy-fox-2c1aa7.netlify.app/', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="HK.png" alt="Hollow Knight" class="game-icon">
+                    <img src="Images/HK.png" alt="Hollow Knight" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Hollow Knight</h3>
@@ -624,9 +261,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('https://funny-valkyrie-d21c5e.netlify.app/', '_blank')">
+            <div class="game-card" data-game="Hollow Knight: Silksong" onclick="window.open('https://funny-valkyrie-d21c5e.netlify.app/', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="SS.png" alt="Balatro" class="game-icon">
+                    <img src="Images/SS.png" alt="Balatro" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Hollow Knight: Silksong</h3>
@@ -635,9 +272,9 @@
                 </div>
             </div>
             
-            <div class="game-card" onclick="window.open('SlimeRancher/index.html', '_blank')">
+            <div class="game-card" data-game="Slime Rancher" onclick="window.open('SlimeRancher/index.html', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="SR.png" alt="Slime Rancher" class="game-icon">
+                    <img src="Images/SR.png" alt="Slime Rancher" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Slime Rancher</h3>
@@ -645,9 +282,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('https://venerable-basbousa-db8362.netlify.app/', '_blank')">
+            <div class="game-card" data-game="Balatro" onclick="window.open('https://venerable-basbousa-db8362.netlify.app/', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="balatro.png" alt="Balatro" class="game-icon">
+                    <img src="Images/balatro.png" alt="Balatro" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Balatro</h3>
@@ -656,9 +293,9 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="window.open('https://celadon-blini-499648.netlify.app/', '_blank')">
+            <div class="game-card" data-game="Yandere Simulator" onclick="window.open('https://celadon-blini-499648.netlify.app/', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="YSLogo.png" alt="Yandere Simulator" class="game-icon">
+                    <img src="Images/YSLogo.png" alt="Yandere Simulator" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Yandere Simulator</h3>
@@ -669,9 +306,21 @@
                 </div>
             </div>
 
-            <div class="game-card" onclick="openLocked(this, 'NSO/index.html')" data-locked="true">
+            <div class="game-card" data-game="Omori" onclick="window.open('https://celadon-blini-499648.netlify.app/', '_blank')">
                 <div class="game-icon-wrap">
-                    <img src="NSO.png" alt="Needy Streamer Overload" class="game-icon">
+                    <img src="Images/Omroi.png" alt="Omori" class="game-icon">
+                </div>
+                <div class="game-card-text">
+                    <h3>Omori</h3>
+                    <b>!! NOT CURRENTLY AVAILABLE !!</b>
+                    <p>Will be available within a few days!</p>
+                    <p>Credits to gn-math!</p>
+                </div>
+            </div>
+
+            <div class="game-card" data-game="Needy Streamer Overload" data-locked="true" onclick="openLocked(this, 'NSO/index.html')">
+                <div class="game-icon-wrap">
+                    <img src="Images/NSO.png" alt="Needy Streamer Overload" class="game-icon">
                 </div>
                 <div class="game-card-text">
                     <h3>Needy Streamer Overload</h3>
@@ -688,7 +337,7 @@
 
     <div class="pw-modal-backdrop" id="pwBackdrop" onclick="closePwModal(event)">
         <div class="pw-modal">
-            <img src="lock.png" alt="Lock" class="lock-icon-modal">
+            <img src="Images/lock.png" alt="Lock" class="lock-icon-modal">
             <h2>Age Restricted</h2>
             <p>Enter the password to continue.</p>
             <input
@@ -706,74 +355,33 @@
         </div>
     </div>
 
-    <script>
-        console.log("Hello there, fellow inspect user. You wont find anything very cool in here. Dont look too deep into my programming \"skills\" though");
-
-        const LOCKED_PASSWORD = "5789";
-
-        let pendingUrl = null;
-
-        function openLocked(card, url) {
-            pendingUrl = url;
-            const backdrop = document.getElementById('pwBackdrop');
-            const input = document.getElementById('pwInput');
-            const errEl = document.getElementById('pwError');
-            errEl.textContent = '';
-            input.value = '';
-            backdrop.classList.add('open');
-            setTimeout(() => input.focus(), 80);
-        }
-
-        function closePwModal(e) {
-
-            if (e && e.target !== document.getElementById('pwBackdrop')) return;
-            document.getElementById('pwBackdrop').classList.remove('open');
-            pendingUrl = null;
-        }
-
-        function confirmPassword() {
-            const input = document.getElementById('pwInput');
-            const errEl = document.getElementById('pwError');
-            if (input.value === LOCKED_PASSWORD) {
-                document.getElementById('pwBackdrop').classList.remove('open');
-                window.open(pendingUrl, '_blank');
-                pendingUrl = null;
-            } else {
-                errEl.textContent = 'Incorrect. Ask me for the password.';
-                input.classList.remove('shake');
-                void input.offsetWidth;
-                input.classList.add('shake');
-                input.value = '';
-                setTimeout(() => input.classList.remove('shake'), 400);
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.getElementById('pwBackdrop').classList.remove('open');
-                pendingUrl = null;
-            }
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (Math.random() > 0.4) return;
-            const spark = document.createElement('div');
-            spark.style.cssText = `
-                position:fixed; pointer-events:none; z-index:998;
-                left:${e.clientX}px; top:${e.clientY}px;
-                width:6px; height:6px; border-radius:50%;
-                background: hsl(${330 + Math.random()*40}deg, 100%, 75%);
-                transform: translate(-50%,-50%) scale(1);
-                transition: transform 0.5s, opacity 0.5s;
-                opacity: 0.9;
-            `;
-            document.body.appendChild(spark);
-            requestAnimationFrame(() => {
-                spark.style.transform = `translate(${(Math.random()-0.5)*30}px, ${-20 - Math.random()*20}px) scale(0)`;
-                spark.style.opacity = '0';
-            });
-            setTimeout(() => spark.remove(), 550);
-        });
-    </script>
+    <div id="stats-panel">
+        <div class="sp-header">
+            <span class="sp-title">Site Stats</span>
+            <button class="sp-close-btn" onclick="closeStatsPanel()" title="Close">✕</button>
+        </div>
+        <div id="sp-loading" class="sp-loading">Loading stats...</div>
+        <div id="sp-content" style="display:none">
+            <div class="sp-stat-row">
+                <span class="sp-stat-label"><span class="sp-active-dot"></span> Active users</span>
+                <span class="sp-stat-val" id="sp-active">—</span>
+            </div>
+            <div class="sp-stat-row">
+                <span class="sp-stat-label">Total site visits</span>
+                <span class="sp-stat-val" id="sp-visits">—</span>
+            </div>
+            <div class="sp-stat-row">
+                <span class="sp-stat-label">Total time on site</span>
+                <span class="sp-stat-val" id="sp-time">—</span>
+            </div>
+            <div class="sp-stat-row">
+                <span class="sp-stat-label">Total game launches</span>
+                <span class="sp-stat-val" id="sp-total-plays">—</span>
+            </div>
+            <div class="sp-section-label">Plays per game</div>
+            <div id="sp-games-list"></div>
+        </div>
+        <div class="sp-hint">CTRL + SHIFT + ` to toggle</div>
+    </div>
 </body>
 </html>
