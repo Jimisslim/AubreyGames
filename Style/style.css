@@ -390,6 +390,36 @@ footer span {
     color: var(--pink);
     letter-spacing: 0.03em;
 }
+
+.announcement-box {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    max-width: 260px;
+    background: #0a0000;
+    border: 1px solid rgb(255, 0, 0);
+    padding: 14px 16px;
+    z-index: 500;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.2), 0 8px 24px rgba(0,0,0,0.7);
+}
+
+.announcement-label {
+    display: block;
+    font-family: 'Fredoka One', cursive;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 6px;
+}
+
+.announcement-box p {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 194, 217, 0.85);
+}
+
 .sp-section-label {
     font-family: 'Fredoka One', cursive;
     font-size: 11px;
