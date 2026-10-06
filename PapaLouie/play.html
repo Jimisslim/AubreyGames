@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papa Louie | Aubrey's Games</title>
+    <link rel="icon" href="../Images/Icon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <script src="ruffle/ruffle.js"></script>
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
+        #game { position: fixed; inset: 0; overflow: hidden; }
+        #game ruffle-player, #game ruffle-embed { width: 100%; height: 100%; display: block; }
+        .bar {
+            position: fixed; top: 10px; left: 10px; z-index: 10;
+            display: flex; gap: 8px; align-items: center;
+            font-family: 'Fredoka One', sans-serif;
+        }
+        .bar a, .bar button {
+            padding: 8px 14px; background: rgba(0,0,0,0.6); color: #ffd1e3;
+            border: 1px solid rgba(255,133,179,0.5); border-radius: 6px;
+            text-decoration: none; font: inherit; font-size: 14px; cursor: pointer;
+            opacity: 0.45; transition: opacity 0.2s;
+        }
+        .bar a:hover, .bar button:hover { opacity: 1; }
+        #err { color: #ffd1e3; font-family: 'Fredoka One', sans-serif; text-align: center; margin-top: 40vh; }
+    </style>
+</head>
+<body>
+    <div class="bar">
+        <a href="../index.html">&larr; Back</a>
+        <button onclick="goFull()">Fullscreen</button>
+        <button id="zoomBtn" onclick="toggleZoom()" style="display:none">Zoom: OFF</button>
+    </div>
+    <div id="game"></div>
+
+    <script>
+        // Every Papa Louie flash game. Key = ?game= value, file lives in swf/
+        const GAMES = {
+            papalouie1:       "Papa Louie: When Pizzas Attack!",
+            papalouie2:       "Papa Louie 2: When Burgers Attack!",
+            papalouie3:       "Papa Louie 3: When Sundaes Attack!",
+            papaspizzeria:    "Papa's Pizzeria",
+            papasburgeria:    "Papa's Burgeria",
+            papastacomia:     "Papa's Taco Mia!",
+            papasfreezeria:   "Papa's Freezeria",
+            papaspancakeria:  "Papa's Pancakeria",
+            papaswingeria:    "Papa's Wingeria",
+            papashotdoggeria: "Papa's Hot Doggeria",
+            papascupcakeria:  "Papa's Cupcakeria",
+            papaspastaria:    "Papa's Pastaria",
+            papasdonuteria:   "Papa's Donuteria",
+            papascheeseria:   "Papa's Cheeseria",
+            papasbakeria:     "Papa's Bakeria",
+            papassushiria:    "Papa's Sushiria",
+            papasscooperia:   "Papa's Scooperia"
+        };
+
+        window.RufflePlayer = window.RufflePlayer || {};
+        window.RufflePlayer.config = {
+            publicPath: "ruffle/",
+            autoplay: "on",
+            unmuteOverlay: "hidden",
+            splashScreen: true,
+            letterbox: "on",
+            backgroundColor: "#000000",
+            quality: "high",
+            contextMenu: "on",
+            showSwfDownload: false,
+            warnOnUnsupportedContent: false,
+            logLevel: "error"
+        };
+
+        const key = new URLSearchParams(location.search).get("game");
+        const container = document.getElementById("game");
+
+        if (!key || !GAMES[key]) {
+            container.innerHTML = '<div id="err">Game not found. <a href="../index.html" style="color:#ff85b3">Go back</a></div>';
+        } else {
+            document.title = GAMES[key] + " | Aubrey's Games";
+            window.addEventListener("load", () => {
+                const ruffle = window.RufflePlayer.newest();
+                const player = ruffle.createPlayer();
+                container.appendChild(player);
+                const opts = { url: "swf/" + key + ".swf" };
+                if (typeof player.ruffle === "function") player.ruffle().load(opts);
+                else player.load(opts);
+                if (ZOOM[key]) setupZoom(player, ZOOM[key]);
+            });
+        }
+
+        // Some SWFs only draw the game in a small part of their stage.
+        // stage = SWF stage size, game = where the game actually sits (in stage pixels).
+        const ZOOM = {
+            papalouie1: { stage: [550, 400], game: [195.6, 144.7, 155, 117.5], continueBtn: [420, 365, 130, 35] }
+        };
+
+        let zoomOn = false, zoomPlayer = null, zoomCfg = null;
+
+        function setupZoom(player, z) {
+            zoomPlayer = player; zoomCfg = z;
+            document.getElementById("zoomBtn").style.display = "";
+            window.addEventListener("resize", applyZoom);
+            document.addEventListener("fullscreenchange", applyZoom);
+            // The Flipline ad screen uses the whole stage, so only zoom in
+            // once CONTINUE (bottom-right of the stage) is clicked.
+            document.getElementById("game").addEventListener("pointerdown", e => {
+                if (zoomOn) return;
+                const W = window.innerWidth, H = window.innerHeight;
+                const [sw, sh] = z.stage;
+                const s0 = Math.min(W / sw, H / sh);
+                const x = (e.clientX - (W - sw * s0) / 2) / s0;
+                const y = (e.clientY - (H - sh * s0) / 2) / s0;
+                const [bx, by, bw, bh] = z.continueBtn;
+                if (x >= bx && x <= bx + bw && y >= by && y <= by + bh) {
+                    setTimeout(() => setZoom(true), 400);
+                }
+            }, true);
+        }
+
+        function setZoom(on) {
+            zoomOn = on;
+            document.getElementById("zoomBtn").textContent = on ? "Zoom: ON" : "Zoom: OFF";
+            applyZoom();
+        }
+
+        function toggleZoom() { setZoom(!zoomOn); }
+
+        function applyZoom() {
+            if (!zoomPlayer) return;
+            if (zoomOn) fitZoom(zoomPlayer, zoomCfg);
+            else zoomPlayer.style.transform = "";
+        }
+
+        function fitZoom(player, z) {
+            const W = window.innerWidth, H = window.innerHeight;
+            const [sw, sh] = z.stage, [gx, gy, gw, gh] = z.game;
+            // where Ruffle letterboxes the stage inside the player
+            const s0 = Math.min(W / sw, H / sh);
+            const ox = (W - sw * s0) / 2, oy = (H - sh * s0) / 2;
+            // game center + size in player pixels
+            const cx = ox + (gx + gw / 2) * s0, cy = oy + (gy + gh / 2) * s0;
+            const S = Math.min(W / (gw * s0), H / (gh * s0)) * 0.9;
+            player.style.transformOrigin = "0 0";
+            player.style.transform = `translate(${W / 2 - S * cx}px, ${H / 2 - S * cy}px) scale(${S})`;
+        }
+
+        function goFull() {
+            const el = document.documentElement;
+            if (document.fullscreenElement) document.exitFullscreen();
+            else if (el.requestFullscreen) el.requestFullscreen();
+        }
+    </script>
+</body>
+</html>
